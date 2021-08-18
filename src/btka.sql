@@ -171,3 +171,7 @@ from vattu vt
 WHERE soluongnhap>5
 GROUP BY ctpn.soluongnhap, vt.ma_vattu, pn.ma_phieunhap, ctpn.donggianhap
 ;
+
+-- Câu 6. Tạo view có tên vw_CTPNHAP_VT_loc bao gồm các thông tin sau:
+-- số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+-- Và chỉ liệt kê các chi tiết nhập vật tư có đơn vị tính là Bộ.
