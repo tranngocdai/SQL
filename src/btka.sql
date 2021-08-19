@@ -168,10 +168,72 @@ SELECT pn.ma_phieunhap,
 from vattu vt
          join ChiTietPhieuNhap CTPN on vt.vattu_id = CTPN.vattu_id
          join PhieuNhap PN on PN.phieunhap_id = CTPN.phieunhap_id
-WHERE soluongnhap>5
+WHERE soluongnhap > 5
 GROUP BY ctpn.soluongnhap, vt.ma_vattu, pn.ma_phieunhap, ctpn.donggianhap
 ;
 
--- Câu 6. Tạo view có tên vw_CTPNHAP_VT_loc bao gồm các thông tin sau:
--- số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
--- Và chỉ liệt kê các chi tiết nhập vật tư có đơn vị tính là Bộ.
+# Câu 6. Tạo view có tên vw_CTPNHAP_VT_loc bao gồm các thông tin sau:
+# số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
+# Và chỉ liệt kê các chi tiết nhập vật tư có đơn vị tính là Bộ.
+
+CREATE VIEW vw_CTPNHAP_VT_loc
+AS
+SELECT pn.ma_phieunhap,
+       vt.ma_vattu,
+       vt.ten_vattu,
+       ctpn.soluongnhap,
+       ctpn.donggianhap,
+       sum(ctpn.soluongnhap * ctpn.donggianhap) 'Thành tiền nhập'
+FROM vattu vt
+         join ChiTietPhieuNhap ctpn on vt.vattu_id = ctpn.vattu_id
+         join PhieuNhap pn on pn.phieunhap_id = ctpn.phieunhap_id
+WHERE dv_tinh = 'Bộ'
+group by ctpn.soluongnhap, vt.ma_vattu, vt.ten_vattu, pn.ma_phieunhap, ctpn.donggianhap;
+
+# Câu 7. Tạo view có tên vw_CTPXUAT bao gồm các thông tin sau:
+# số phiếu xuất hàng, mã vật tư, số lượng xuất, đơn giá xuất, thành tiền xuất.
+
+
+CREATE VIEW vw_CTPXUAT
+AS
+SELECT px.ma_phieuxuat,
+       vt.ma_vattu,
+       vt.ten_vattu,
+       ctpx.soluongxuat,
+       ctpx.dongiaxuat,
+       sum(ctpx.soluongxuat * ctpx.dongiaxuat) 'Thành tiền xuất'
+FROM vattu vt
+         join ChiTietPhieuXuat CTPX on vt.vattu_id = CTPX.vattu_id
+         join PhieuXuat PX on PX.phieuxuat_id = CTPX.phieuxuat_id
+group by ctpx.soluongxuat, vt.ma_vattu, vt.ten_vattu, px.ma_phieuxuat, ctpx.dongiaxuat;
+
+# Câu 8. Tạo view có tên vw_CTPXUAT_VT bao gồm các thông tin sau:
+# số phiếu xuất hàng, mã vật tư, tên vật tư, số lượng xuất, đơn giá xuất.
+
+CREATE VIEW vw_CTPXUAT_VT
+AS
+SELECT px.ma_phieuxuat,
+       vt.ma_vattu,
+       vt.ten_vattu,
+       ctpx.soluongxuat,
+       ctpx.dongiaxuat
+FROM vattu vt
+         join ChiTietPhieuXuat CTPX on vt.vattu_id = CTPX.vattu_id
+         join PhieuXuat PX on PX.phieuxuat_id = CTPX.phieuxuat_id
+group by ctpx.soluongxuat, vt.ma_vattu, vt.ten_vattu, px.ma_phieuxuat, ctpx.dongiaxuat;
+
+# Câu 9. Tạo view có tên vw_CTPXUAT_VT_PX bao gồm các thông tin sau:
+# số phiếu xuất hàng, tên khách hàng, mã vật tư, tên vật tư, số lượng xuất, đơn giá xuất.
+
+CREATE VIEW vw_CTPXUAT_VT_PX
+AS
+SELECT px.ma_phieuxuat,
+       px.tenkhachhang,
+       vt.ma_vattu,
+       vt.ten_vattu,
+       ctpx.soluongxuat,
+       ctpx.dongiaxuat
+FROM vattu vt
+         join ChiTietPhieuXuat CTPX on vt.vattu_id = CTPX.vattu_id
+         join PhieuXuat PX on PX.phieuxuat_id = CTPX.phieuxuat_id
+group by ctpx.soluongxuat, px.tenkhachhang, vt.ma_vattu, vt.ten_vattu, px.ma_phieuxuat, ctpx.dongiaxuat;
