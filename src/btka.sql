@@ -237,3 +237,24 @@ FROM vattu vt
          join ChiTietPhieuXuat CTPX on vt.vattu_id = CTPX.vattu_id
          join PhieuXuat PX on PX.phieuxuat_id = CTPX.phieuxuat_id
 group by ctpx.soluongxuat, px.tenkhachhang, vt.ma_vattu, vt.ten_vattu, px.ma_phieuxuat, ctpx.dongiaxuat;
+
+# Tạo các stored procedure
+
+# Câu 1. Tạo Stored procedure (SP) cho biết
+# tổng số lượng cuối của vật tư với mã vật tư là tham số vào.
+
+CREATE procedure SP_VatTu (in ma_spvattu varchar(50))
+Begin
+    select ma_vattu,soluongdau + tongsoluongnhap -tongsoluongxuat as 'Tổng số lượng cuối'
+    from tonkho
+             join VatTu VT on VT.vattu_id = TonKho.vattu_id
+    WHERE ma_vattu = ma_spvattu;
+end;
+
+# Câu 2. Tạo SP cho biết tổng tiền xuất của vật tư với mã vật tư là tham số vào.
+
+# Câu 3. Tạo SP cho biết tổng số lượng đặt theo số đơn hàng với số đơn hàng là tham số vào.
+
+# Câu 4. Tạo SP dùng để thêm một đơn đặt hàng.
+
+# Câu 5. Tạo SP dùng để thêm một chi tiết đơn đặt hàng.
